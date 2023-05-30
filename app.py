@@ -13,22 +13,13 @@ scalar = pickle.load(open('scaling.pkl', 'rb'))
 def home():
     return render_template('home.html')
 
-# @app.route('/predict_api', methods = ['POST'])
-# def predict_api():
-#     data = request.json['data']
-#     recievedArray = np.array(list(data.values())).reshape(1, -1)
-#     new_data = scalar.transform(recievedArray)
-#     predicted_val = regmodel.predict(new_data)
-#     print(predicted_val)
-#     return jsonify(predicted_val[0])
-
 @app.route('/predict', methods = ['POST'])
 def predict():
     data = [float(x) for x in request.form.values()]
     final_input = scalar.transform(np.array(data).reshape(1, -1))
     print(final_input)
     output = regmodel.predict(final_input)[0]
-    return render_template('home.html', prediction_text = f'The House price prediction is {output}')
+    return render_template('home.html', prediction_text = f'The Boston House price prediction is {round(output, 1) * 10000} ')
 
 if __name__ == "__main__":
     app.run(debug = True)
